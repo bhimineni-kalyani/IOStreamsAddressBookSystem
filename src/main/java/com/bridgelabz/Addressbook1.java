@@ -1,12 +1,15 @@
 package com.bridgelabz;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class Contact {
+class Contact1 {
 
     private String firstName;
     private String lastName;
@@ -17,10 +20,10 @@ class Contact {
     private String phoneNumber;
     private String email;
 
-    public Contact() {
+    public Contact1() {
     }
 
-    public Contact(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
+    public Contact1(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -107,24 +110,24 @@ class Contact {
     }
 }
 
-public class Addressbook {
+public class Addressbook1 {
     static ArrayList<Contact> list = new ArrayList<Contact>();
-    public static Addressbook addressbook = new Addressbook(null);
+    public static Addressbook1 addressbook1 = new Addressbook1(null);
     public static Contact contact = new Contact();
 
     static Scanner sc = new Scanner(System.in);
-    public static ArrayList<Addressbook> book = new ArrayList<>();
+    public static ArrayList<Addressbook1> book = new ArrayList<>();
     public HashMap<String, String> citydictionary = new HashMap<>();
     public HashMap<String, String> statedictionary = new HashMap<>();
     public int count = 0;
 
-    public Addressbook(String str) {
+    public Addressbook1(String str) {
     }
 
     public static void defaultBook() {
-        book.add(new Addressbook("Addressbook 1"));
-        book.add(new Addressbook("Addressbook 2"));
-        book.add(new Addressbook("Addressbook 3"));
+        book.add(new Addressbook1("Addressbook 1"));
+        book.add(new Addressbook1("Addressbook 2"));
+        book.add(new Addressbook1("Addressbook 3"));
     }
 
     public void DefaultContact() {
@@ -140,7 +143,7 @@ public class Addressbook {
     public static void addAddressBook() {
         System.out.print("Enter new Addressbook : ");
         String str = sc.next();
-        book.add(new Addressbook(str));
+        book.add(new Addressbook1(str));
     }
 
     public void Searchpersonwithcity() {
@@ -164,7 +167,7 @@ public class Addressbook {
     }
 
     public void PersonCityDictionary() {
-        for (Addressbook address : book) {
+        for (Addressbook1 address : book) {
             for (Contact contact : address.list) {
                 String name = contact.getFirstName();
                 citydictionary.put(name, contact.getCity());
@@ -182,7 +185,7 @@ public class Addressbook {
     }
 
     public void PersonStateDictionary() {
-        for (Addressbook address : book) {
+        for (Addressbook1 address : book) {
             for (Contact contact : address.list) {
                 String name = contact.getFirstName();
                 statedictionary.put(name, contact.getState());
@@ -199,11 +202,83 @@ public class Addressbook {
         System.out.println("Count of contacts" + state + "state" + count);
     }
 
-    public void AddDetails() {
-        System.out.println("How many contacts would you like to enter? ");
-        int num = sc.nextInt();
+    public void writeCSVFile() throws IOException {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(String.valueOf(Paths.get("addressBook.csv")));
+            fileWriter.append("First Name, Last Name, Address, City, State, Zip, Phone-Number, Email \n");
+            for(Contact g: list) {
+                fileWriter.append(String.valueOf(g.getFirstName()));
+                fileWriter.append(",");
+
+                fileWriter.append(g.getLastName());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getAddress());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getCity());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getState());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getZip());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getPhoneNumber());
+                fileWriter.append(",");
+
+                fileWriter.append(g.getEmail());
+                fileWriter.append(",");
+
+                fileWriter.append("\n");
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void readCsvFile() throws IOException {
+        BufferedReader reader = null;
+        try {
+            String line = "";
+            reader = new BufferedReader(new FileReader(String.valueOf(Paths.get("addressbook.csv"))));
+            while ((line = reader.readLine()) != null) {
+                String[] details = line.split(",");
+                if (details.length > 0) {
+                    Contact P1 = new Contact(details[0], details[1], details[2], details[3], details[4], details[5], details[6], details[7]);
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void AddDetails() {
+        System.out.println("To be add enter the first contact details : ");
+        int name = sc.nextInt();
         list.add(0, new Contact("Kalyani", "Bhimineni", "Lingayapalem", "Guntur", "Andhra", "522005", "9123456789", "bhiminenikalyani@gmail.com"));
-        for (int i = 0; i < num; i++) {
+        int num = 0;
+        for(int i = 0; i < num; i++) {
             System.out.println("Enter FirstName");
             String firstName = sc.next();
 
@@ -227,7 +302,6 @@ public class Addressbook {
 
             System.out.println("Enter Email");
             String email = sc.next();
-
             if (!firstName.equals(list.get(0).getFirstName())) {
                 list.add(new Contact(firstName, lastName, address, city, state, zip, phoneNumber, email));
                 System.out.println(list);
@@ -238,7 +312,7 @@ public class Addressbook {
             }
         }
         Comparator<Contact> list1 = Comparator.comparing(Contact::getFirstName);
-        System.out.println("\n After Sorting the contact details : \n");
+        System.out.println("\n Contact details after sorting : \n");
         list.stream()
                 .sorted(list1)
                 .forEach(System.out::println);
@@ -246,7 +320,7 @@ public class Addressbook {
 
     public void writeData() throws IOException {
         StringBuffer buffer=new StringBuffer();
-        for(int i=0;i<list.size();i++) {
+        for(int i = 0; i < list.size(); i++) {
             Files.write(Paths.get("addressbook.txt"),list.toString().getBytes());
         }
     }
@@ -256,7 +330,7 @@ public class Addressbook {
     }
 
     public void sortbyCity() {
-        System.out.println("\n After Sorting the City : \n");
+        System.out.println("\n Contact details after sorting the city : \n");
         List<Contact> SortedList = list.stream()
                 .sorted(Comparator.comparing(Contact::getCity))
                 .collect(Collectors.toList());
@@ -264,7 +338,7 @@ public class Addressbook {
     }
 
     public void sortbyState() {
-        System.out.println("\n After Sorting the State : \n");
+        System.out.println("\n Contact details after sorting the state : \n");
         List<Contact> SortedList = list.stream()
                 .sorted(Comparator.comparing(Contact::getState))
                 .collect(Collectors.toList());
@@ -272,7 +346,7 @@ public class Addressbook {
     }
 
     public void sortbyZip() {
-        System.out.println("\n After Sorting the Zip : \n");
+        System.out.println("\n Contact details after sorting the zip : \n");
         List<Contact> SortedList = list.stream()
                 .sorted(Comparator.comparing(Contact::getZip))
                 .collect(Collectors.toList());
@@ -312,7 +386,7 @@ public class Addressbook {
             return "Contact was Edited";
         }
         else {
-            return "Name of contact is not available in the list";
+            return  "Name of contact is not available in the list";
         }
     }
 
@@ -330,77 +404,79 @@ public class Addressbook {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Addressbook \n");
-        Addressbook address = new Addressbook(null);
-        System.out.print("1.Add AddressBook" +
-                "\n2.Add Contact" +
-                "\n3.Delete" +
-                "\n4.Edit" +
-                "\n5.SearchPersonwithcity" +
-                "\n6.SearchPersonwithState" +
-                "\n7.PersonCityDictionary+count" +
-                "\n8.PersonStateDictionary+count" +
-                "\n9.sortbyCity" +
-                "\n10.sortbyState" +
-                "\n11.sortbyZip");
-        int check=sc.nextInt();
-        switch(check) {
-            case 1:
-                addAddressBook();
-                break;
-            case 2:
-                try {
-                    address.AddDetails();
-                    address.writeData();
-                    address.readData();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case  3:
-                Delete();
-                break;
-            case 4:
-                Edit();
-                break;
-            case 5:
-                address.defaultBook();
-                address.DefaultContact();
-                address.Searchpersonwithcity();
-                break;
-            case 6:
-                address.defaultBook();
-                address.DefaultContact();
-                address.Searchpersonwithstate();
-                break;
-            case 7:
-                address.defaultBook();
-                address.DefaultContact();
-                address.PersonCityDictionary();
-                break;
-            case 8:
-                address.defaultBook();
-                address.DefaultContact();
-                address.PersonStateDictionary();
-                break;
-            case 9:
-                address.defaultBook();
-                address.DefaultContact();
-                address.sortbyCity();
-                break;
-            case 10:
-                address.defaultBook();
-                address.DefaultContact();
-                address.sortbyState();
-                break;
-            case 11:
-                address.defaultBook();
-                address.DefaultContact();
-                address.sortbyZip();
-                break;
-            default:
-                System.out.println("Invalid");
-        }
+            System.out.println("Welcome to Addressbook \n");
+            Addressbook1 address = new Addressbook1(null);
+            System.out.print("1.Add AddressBook " +
+                           "\n2.Add Contact " +
+                           "\n3.Delete " +
+                           "\n4.Edit " +
+                           "\n5.Search_Person_with_city " +
+                           "\n6.Search_Person_with_State " +
+                           "\n7.PersonCityDictionary+count " +
+                           "\n8.PersonStateDictionary+count" +
+                           "\n9.sort_by_City " +
+                           "\n10.sort_by_State " +
+                           "\n11.sort_by_Zip");
+            int check = sc.nextInt();
+            switch(check) {
+                case 1:
+                            addAddressBook();
+                            break;
+                case 2:
+                            try {
+                                address.AddDetails();
+                                address.writeData();
+                                address.writeCSVFile();
+                                address.readData();
+                                address.readCsvFile();
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                case  3:
+                            Delete();
+                            break;
+                case 4:
+                            Edit();
+                            break;
+                case 5:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.Searchpersonwithcity();
+                            break;
+                case 6:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.Searchpersonwithstate();
+                            break;
+                case 7:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.PersonCityDictionary();
+                            break;
+                case 8:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.PersonStateDictionary();
+                            break;
+                case 9:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.sortbyCity();
+                            break;
+                case 10:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.sortbyState();
+                            break;
+                case 11:
+                            address.defaultBook();
+                            address.DefaultContact();
+                            address.sortbyZip();
+                            break;
+                default:
+                            System.out.println("Invalid");
+            }
     }
 }

@@ -1,0 +1,14 @@
+Details : Bhimineni Kalyani
+Address : Lingayapalem
+City : Guntur
+State : Andhra Pradesh
+Zip : 522005
+Phone Number : 9123456789
+Email : bhiminenikalyani@gmail.com
+Details : Kalyani Bhimineni
+Address : Ankireddypalem
+City : Guntur
+State : Andhra Pradesh
+Zip : 522006
+Phone Number : 9911223344
+Email : kalyanibhimineni@gmail.com
